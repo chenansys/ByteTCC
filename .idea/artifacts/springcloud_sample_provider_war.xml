@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="springcloud-sample-provider:war">
+    <output-path>$PROJECT_DIR$/bytetcc-sample-master/springcloud-sample/sample-provider/target</output-path>
+    <root id="archive" name="springcloud-sample-provider.war">
+      <element id="artifact" artifact-name="springcloud-sample-provider:war exploded" />
+    </root>
+  </artifact>
+</component>
