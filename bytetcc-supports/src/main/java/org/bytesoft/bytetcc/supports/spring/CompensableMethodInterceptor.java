@@ -50,6 +50,13 @@ public class CompensableMethodInterceptor
 	private CompensableBeanFactory beanFactory;
 	private ApplicationContext applicationContext;
 
+	/**
+	 * TODO 获取到了controller方法的@Transactional注解,@Compensable注解 -> CompensableManagerImpl
+	 *
+	 * 获取到了controller方法的@Transactional注解，还获取到了目标contorller的@Compensable注解，
+	 * simplified模式，在当前的类中，就会有@CompensableConfirm和@CompensableCancel
+	 */
+
 	public void afterBegin(Transaction transaction, boolean createFlag) {
 		CompensableManager compensableManager = this.beanFactory.getCompensableManager();
 		CompensableInvocationRegistry registry = CompensableInvocationRegistry.getInstance();

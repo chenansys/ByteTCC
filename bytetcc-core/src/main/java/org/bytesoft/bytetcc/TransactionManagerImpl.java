@@ -42,19 +42,23 @@ public class TransactionManagerImpl implements TransactionManager, CompensableBe
 	private CompensableBeanFactory beanFactory;
 
 	public void begin() throws NotSupportedException, SystemException {
+		//TODO 获取到事务管理器 transactionManager
 		TransactionManager transactionManager = this.beanFactory.getTransactionManager();
 		CompensableManager compensableManager = this.beanFactory.getCompensableManager();
 
 		CompensableTransaction transaction = compensableManager.getCompensableTransactionQuietly();
 
 		CompensableInvocationRegistry registry = CompensableInvocationRegistry.getInstance();
+		//TODO 封装了本次调用的信息,包括目标controller，目标方法，目标@Compensable注解等
 		CompensableInvocation invocation = registry.getCurrent();
 
 		if (transaction != null) {
 			compensableManager.begin();
 		} else if (invocation != null) {
+			//TODO 执行本次事务处理
 			compensableManager.compensableBegin();
 		} else {
+			//TODO 支持普通的事务
 			transactionManager.begin();
 		}
 
@@ -68,6 +72,7 @@ public class TransactionManagerImpl implements TransactionManager, CompensableBe
 		Transaction transaction = transactionManager.getTransactionQuietly();
 		Transaction compensable = compensableManager.getCompensableTransactionQuietly();
 
+		//TODO 分布式事务上下文 TransactionContext
 		TransactionContext transactionContext = null;
 		if (transaction == null && compensable == null) {
 			throw new IllegalStateException();
@@ -106,13 +111,14 @@ public class TransactionManagerImpl implements TransactionManager, CompensableBe
 
 	}
 
+	//TODO 事务的回滚 rollback()
 	public void rollback() throws IllegalStateException, SecurityException, SystemException {
 		TransactionManager transactionManager = this.beanFactory.getTransactionManager();
 		CompensableManager compensableManager = this.beanFactory.getCompensableManager();
 
 		Transaction transaction = transactionManager.getTransactionQuietly();
 		Transaction compensable = compensableManager.getCompensableTransactionQuietly();
-
+		//TODO 获取TCC事务上下文
 		TransactionContext transactionContext = null;
 		if (transaction == null && compensable == null) {
 			throw new IllegalStateException();
@@ -125,6 +131,7 @@ public class TransactionManagerImpl implements TransactionManager, CompensableBe
 		if (org.bytesoft.compensable.TransactionContext.class.isInstance(transactionContext)) {
 			org.bytesoft.compensable.TransactionContext compensableContext = //
 					(org.bytesoft.compensable.TransactionContext) transactionContext;
+			//TODO 执行回滚rollback()的具体方法
 			if (compensableContext.isRecoveried()) {
 				if (compensableContext.isCompensable() == false) {
 					throw new IllegalStateException();

@@ -360,7 +360,7 @@ public class CompensableCoordinator implements RemoteCoordinator, CompensableBea
 		try {
 			// ((CompensableTransactionImpl) transaction).lock(false); // markCurrentBranchTransactionRollbackIfNecessary
 			compensableManager.associateThread(transaction);
-
+			//TODO 本地事务回滚,调用具体应用的 Cancel()方法
 			transaction.participantRollback();
 			// success = true;
 		} catch (IllegalStateException ex) {

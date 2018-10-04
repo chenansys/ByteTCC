@@ -39,6 +39,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class CompensableAnnotationValidator implements BeanFactoryPostProcessor {
 	static final Logger logger = LoggerFactory.getLogger(CompensableAnnotationValidator.class);
 
+	/**
+	 * TODO 核心类 CompensableAnnotationValidator
+	 * 在一个服务启动的时候，bytetcc的组件,去扫描所有的spring bean，尝试获取spring bean上是否加了@Compensable注解
+	 */
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
 		Map<String, Class<?>> otherServiceMap = new HashMap<String, Class<?>>();
 		Map<String, Compensable> compensables = new HashMap<String, Compensable>();

@@ -36,11 +36,18 @@ public class CompensableWork implements Work, CompensableBeanFactoryAware {
 	@javax.inject.Inject
 	private CompensableBeanFactory beanFactory;
 
+	/**
+	 * TODO CompensableWork 事务恢复
+	 * 在服务启动的时候，bytetcc框架会通过后台线程启动一个task，CompensableWork，这个里面会启动一个事务恢复的这么一个过程，
+	 * 如果一个事务执行一半儿，系统崩溃了。系统重启的时候，会有一个事务恢复的过程，也就是说从数据库、日志文件里加载出来没完成的事务的状态，
+	 * 然后继续去执行这个事务
+	 */
+
 	private void initializeIfNecessary() {
 		TransactionRecovery compensableRecovery = this.beanFactory.getCompensableRecovery();
 		if (this.initialized == false) {
 			try {
-				compensableRecovery.startRecovery();
+				compensableRecovery.startRecovery();//TODO 开始执行事务恢复
 				this.initialized = true;
 				compensableRecovery.timingRecover();
 			} catch (RuntimeException rex) {
@@ -61,7 +68,7 @@ public class CompensableWork implements Work, CompensableBeanFactoryAware {
 
 			long current = System.currentTimeMillis();
 			if (current >= nextRecoveryTime) {
-				nextRecoveryTime = current + this.recoveryInterval;
+				nextRecoveryTime = current + this.recoveryInterval;//60s
 
 				try {
 					compensableRecovery.timingRecover();

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="Spring" name="Spring">
+      <configuration>
+        <fileset id="fileset" name="Spring Application Context" removed="false">
+          <file>file://$MODULE_DIR$/bytetcc-supports-springboot/src/main/resources/bytetcc-supports-springboot-core.xml</file>
+          <file>file://$MODULE_DIR$/bytetcc-supports-springboot/src/main/resources/bytetcc-supports-springboot.xml</file>
+          <file>file://$MODULE_DIR$/bytetcc-sample-master/dubbo-sample/sample-provider/src/main/resources/dubbo-provider-4jpa.xml</file>
+          <file>file://$MODULE_DIR$/bytetcc-sample-master/dubbo-sample/sample-provider/src/main/resources/application-spring-data-jpa.xml</file>
+          <file>file://$MODULE_DIR$/bytetcc-supports-springboot/target/classes/bytetcc-supports-springboot-core.xml</file>
+          <file>file://$MODULE_DIR$/bytetcc-supports-springboot/target/classes/bytetcc-supports-springboot.xml</file>
+          <file>file://$MODULE_DIR$/bytetcc-sample-master/dubbo-sample/sample-provider/src/main/resources/application-hibernate.xml</file>
+          <file>file://$MODULE_DIR$/bytetcc-sample-master/dubbo-sample/sample-provider/src/main/resources/application.xml</file>
+          <file>file://$MODULE_DIR$/bytetcc-sample-master/springcloud-sample/sample-consumer/target/classes/spring-mybatis.xml</file>
+          <file>file://$MODULE_DIR$/bytetcc-sample-master/springcloud-sample/sample-consumer/src/main/resources/spring-mybatis.xml</file>
+          <file>file://$MODULE_DIR$/bytetcc-sample-master/dubbo-sample/sample-provider/src/main/resources/dubbo-provider.xml</file>
+          <file>file://$MODULE_DIR$/bytetcc-sample-master/dubbo-sample/sample-consumer/src/main/resources/standalone.xml</file>
+          <file>file://$MODULE_DIR$/bytetcc-sample-master/dubbo-sample/sample-consumer/src/main/resources/application.xml</file>
+          <file>file://$MODULE_DIR$/bytetcc-sample-master/dubbo-sample/sample-consumer/target/classes/standalone.xml</file>
+          <file>file://$MODULE_DIR$/bytetcc-sample-master/dubbo-sample/sample-consumer/target/classes/application.xml</file>
+          <file>file://$MODULE_DIR$/bytetcc-sample-master/dubbo-sample/sample-consumer/target/classes/dubbo-consumer.xml</file>
+          <file>file://$MODULE_DIR$/bytetcc-sample-master/dubbo-sample/sample-provider/target/classes/application-hibernate.xml</file>
+          <file>file://$MODULE_DIR$/bytetcc-sample-master/dubbo-sample/sample-provider/target/classes/application.xml</file>
+          <file>file://$MODULE_DIR$/bytetcc-sample-master/dubbo-sample/sample-consumer/src/main/resources/dubbo-consumer.xml</file>
+          <file>file://$MODULE_DIR$/bytetcc-sample-master/dubbo-sample/sample-provider/target/classes/application-spring-data-jpa.xml</file>
+          <file>file://$MODULE_DIR$/bytetcc-sample-master/dubbo-sample/sample-provider/target/classes/dubbo-provider.xml</file>
+          <file>file://$MODULE_DIR$/bytetcc-sample-master/dubbo-sample/sample-provider/target/classes/dubbo-provider-4jpa.xml</file>
+        </fileset>
+      </configuration>
+    </facet>
+    <facet type="jpa" name="JPA">
+      <configuration>
+        <setting name="validation-enabled" value="true" />
+        <setting name="provider-name" value="" />
+        <datasource-mapping />
+        <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/bytetcc-sample-master/dubbo-sample/sample-provider/target/classes/META-INF/persistence.xml" />
+      </configuration>
+    </facet>
+  </component>
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_5" inherit-compiler-output="false">
+    <output url="file://$MODULE_DIR$/target/classes" />
+    <output-test url="file://$MODULE_DIR$/target/test-classes" />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/target" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

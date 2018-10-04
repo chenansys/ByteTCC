@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/ByteTCC.iml" filepath="$PROJECT_DIR$/.idea/ByteTCC.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bytetcc-common/bytetcc-common.iml" filepath="$PROJECT_DIR$/bytetcc-common/bytetcc-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bytetcc-core/bytetcc-core.iml" filepath="$PROJECT_DIR$/bytetcc-core/bytetcc-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bytetcc-supports/bytetcc-supports.iml" filepath="$PROJECT_DIR$/bytetcc-supports/bytetcc-supports.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bytetcc-supports-dubbo/bytetcc-supports-dubbo.iml" filepath="$PROJECT_DIR$/bytetcc-supports-dubbo/bytetcc-supports-dubbo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bytetcc-supports-springcloud/bytetcc-supports-springcloud.iml" filepath="$PROJECT_DIR$/bytetcc-supports-springcloud/bytetcc-supports-springcloud.iml" />
+    </modules>
+  </component>
+</project>

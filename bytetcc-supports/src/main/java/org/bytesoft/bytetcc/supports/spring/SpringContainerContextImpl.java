@@ -33,6 +33,7 @@ public class SpringContainerContextImpl implements ContainerContext, Application
 
 	private ApplicationContext applicationContext;
 
+	//TODO confirm()
 	public void confirm(CompensableInvocation invocation) throws RuntimeException {
 		String identifier = (String) invocation.getIdentifier();
 		String confirmableKey = invocation.getConfirmableKey();
@@ -48,6 +49,7 @@ public class SpringContainerContextImpl implements ContainerContext, Application
 		}
 	}
 
+	//TODO confirmSimplified()
 	private void confirmSimplified(Method method, Object instance, Object[] args) throws RuntimeException {
 		Class<?> clazz = instance.getClass();
 		Class<?> targetClazz = method.getDeclaringClass();
@@ -85,6 +87,7 @@ public class SpringContainerContextImpl implements ContainerContext, Application
 
 	}
 
+	//TODO confirmComplicated()
 	public void confirmComplicated(Method method, Object instance, Object[] args) throws RuntimeException {
 		try {
 			method.invoke(instance, args);
@@ -97,6 +100,7 @@ public class SpringContainerContextImpl implements ContainerContext, Application
 		}
 	}
 
+	// TODO cancel()
 	public void cancel(CompensableInvocation invocation) throws RuntimeException {
 		String identifier = (String) invocation.getIdentifier();
 		String cancellableKey = invocation.getCancellableKey();
@@ -114,6 +118,7 @@ public class SpringContainerContextImpl implements ContainerContext, Application
 
 	}
 
+	//TODO cancelSimplified()
 	private void cancelSimplified(Method method, Object instance, Object[] args) throws RuntimeException {
 		Class<?> clazz = instance.getClass();
 		Class<?> targetClazz = method.getDeclaringClass();
@@ -150,7 +155,7 @@ public class SpringContainerContextImpl implements ContainerContext, Application
 		}
 
 	}
-
+	//TODO cancelComplicated()
 	public void cancelComplicated(Method method, Object instance, Object[] args) throws RuntimeException {
 		try {
 			method.invoke(instance, args);

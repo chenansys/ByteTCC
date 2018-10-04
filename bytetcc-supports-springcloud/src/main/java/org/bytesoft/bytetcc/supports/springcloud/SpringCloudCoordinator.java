@@ -81,10 +81,15 @@ public class SpringCloudCoordinator implements InvocationHandler {
 		}
 	}
 
+	//TODO invokePostCoordinator Post代理请求
 	public Object invokePostCoordinator(Object proxy, Method method, Object[] args) throws Throwable {
 
 		Class<?> returnType = method.getReturnType();
 		try {
+			//TODO RestTemplate, 获得transactionRestTemplate ,拼接具体方法的调用请求URL,并RestTemplate来发送这个请求
+			// 在这里，就会拼接出来一个针对资金服务的cancel接口调用的请求URL，使用RestTemplate来发送这个请求，
+			// 会去请求资金服务里的bytetcc内置的一个controller，带过去的是一个xid，分布式事务id，
+			// 资金服务内部的bytetcc controller就可以根据分布式事务id，来执行对应的cancel操作
 			RestTemplate transactionRestTemplate = SpringCloudBeanRegistry.getInstance().getRestTemplate();
 			RestTemplate restTemplate = transactionRestTemplate == null ? new RestTemplate() : transactionRestTemplate;
 
@@ -114,7 +119,7 @@ public class SpringCloudCoordinator implements InvocationHandler {
 				Serializable arg = (Serializable) args[i];
 				ber.append("/").append(this.serialize(arg));
 			}
-
+			//TODO ResponseEntity, Rest请求的返回结果
 			ResponseEntity<?> response = restTemplate.postForEntity(ber.toString(), null, returnType, new Object[0]);
 
 			return response.getBody();
@@ -152,7 +157,7 @@ public class SpringCloudCoordinator implements InvocationHandler {
 		}
 
 	}
-
+	//TODO invokePostCoordinator Get代理请求
 	public Object invokeGetCoordinator(Object proxy, Method method, Object[] args) throws Throwable {
 
 		Class<?> returnType = method.getReturnType();

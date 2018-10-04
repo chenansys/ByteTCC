@@ -73,7 +73,7 @@ public class SpringCloudConfiguration extends WebMvcConfigurerAdapter implements
 		String host = CommonUtils.getInetAddress();
 		String name = this.environment.getProperty("spring.application.name");
 		String port = this.environment.getProperty("server.port");
-		this.identifier = String.format("%s:%s:%s", host, name, port);
+		this.identifier = String.format("%s:%s:%s", host, name, port);//标识了当前的服务
 	}
 
 	@org.springframework.context.annotation.Bean

@@ -46,12 +46,15 @@ public class CompensableContextPostProcessor implements BeanFactoryPostProcessor
 
 			Class<?> beanClass = null;
 			try {
+				//拿到Spring容器所有的类
 				beanClass = cl.loadClass(beanClassName);
 			} catch (Exception ex) {
 				logger.debug("Cannot load class {}, beanId= {}!", beanClassName, beanName, ex);
 				continue;
 			}
-
+			/**
+			 * TODO 查看 beanClass 是否是实现了 CompensableContextAware 的接口
+			 */
 			if (CompensableContextAware.class.isAssignableFrom(beanClass)) {
 				beanDefList.add(beanDef);
 			}

@@ -46,36 +46,45 @@ public class CompensableFeignHandler implements InvocationHandler {
 
 	private InvocationHandler delegate;
 
+	/**
+	 * TODO 对feign动态代理的FeignInvocationHandler进行处理
+	 * TODO 封装了feign原生的InvocationHandler，所有对@FeignClient接口的调用，都会走到bytetcc里面去
+	 */
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		if (Object.class.equals(method.getDeclaringClass())) {
 			return method.invoke(this, args);
 		} else {
+			// 获取一个应用的实例
 			final SpringCloudBeanRegistry beanRegistry = SpringCloudBeanRegistry.getInstance();
 			CompensableBeanFactory beanFactory = beanRegistry.getBeanFactory();
+			// 获取TCC分布式事务管理器
 			CompensableManager compensableManager = beanFactory.getCompensableManager();
 			final TransactionInterceptor transactionInterceptor = beanFactory.getTransactionInterceptor();
-
+			// 一个TCC事务
 			CompensableTransactionImpl compensable = //
 					(CompensableTransactionImpl) compensableManager.getCompensableTransactionQuietly();
 			if (compensable == null) {
 				return this.delegate.invoke(proxy, method, args);
 			}
-
+			// TCC上下文
 			final TransactionContext transactionContext = compensable.getTransactionContext();
 			if (transactionContext.isCompensable() == false) {
 				return this.delegate.invoke(proxy, method, args);
 			}
-
+			// 本次请求
 			final TransactionRequestImpl request = new TransactionRequestImpl();
+			// 本次响应
 			final TransactionResponseImpl response = new TransactionResponseImpl();
 
 			final Map<String, XAResourceArchive> participants = compensable.getParticipantArchiveMap();
+			// LoadBalancer,负载均衡
 			beanRegistry.setLoadBalancerInterceptor(new CompensableLoadBalancerInterceptor() {
 				public List<Server> beforeCompletion(List<Server> servers) {
 					final List<Server> readyServerList = new ArrayList<Server>();
 					final List<Server> unReadyServerList = new ArrayList<Server>();
 
 					for (int i = 0; servers != null && i < servers.size(); i++) {
+						// 获取一个Server服务
 						Server server = servers.get(i);
 
 						// String instanceId = metaInfo.getInstanceId();
@@ -158,6 +167,7 @@ public class CompensableFeignHandler implements InvocationHandler {
 			});
 
 			try {
+				//使用代理方法,执行原生的事务方法
 				return this.delegate.invoke(proxy, method, args);
 			} finally {
 				if (response.isIntercepted() == false) {

@@ -41,6 +41,7 @@ public class CompensableFeignInterceptor
 
 	@SuppressWarnings("deprecation")
 	public void apply(feign.RequestTemplate template) {
+		//获取应用的实例
 		final SpringCloudBeanRegistry beanRegistry = SpringCloudBeanRegistry.getInstance();
 		CompensableBeanFactory beanFactory = beanRegistry.getBeanFactory();
 		CompensableManager compensableManager = beanFactory.getCompensableManager();
@@ -50,6 +51,7 @@ public class CompensableFeignInterceptor
 		}
 
 		try {
+			// TCC 事务上下文
 			TransactionContext transactionContext = compensable.getTransactionContext();
 			byte[] byteArray = CommonUtils.serializeObject(transactionContext);
 

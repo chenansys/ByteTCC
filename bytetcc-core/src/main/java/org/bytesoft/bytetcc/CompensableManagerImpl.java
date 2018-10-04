@@ -150,6 +150,7 @@ public class CompensableManagerImpl implements CompensableManager, CompensableBe
 			throws NotSupportedException, SystemException {
 		RemoteCoordinator transactionCoordinator = this.beanFactory.getTransactionCoordinator();
 
+		//TODO CompensableTransaction 就是TCC事务,可补偿的事务
 		CompensableTransaction compensable = this.getCompensableTransactionQuietly();
 		TransactionContext compensableContext = compensable.getTransactionContext();
 
@@ -196,6 +197,7 @@ public class CompensableManagerImpl implements CompensableManager, CompensableBe
 		}
 	}
 
+	//TODO compensableBegin()
 	public void compensableBegin() throws NotSupportedException, SystemException {
 		if (this.getCompensableTransactionQuietly() != null) {
 			throw new NotSupportedException();
@@ -208,7 +210,7 @@ public class CompensableManagerImpl implements CompensableManager, CompensableBe
 
 		XidFactory transactionXidFactory = this.beanFactory.getTransactionXidFactory();
 		XidFactory compensableXidFactory = this.beanFactory.getCompensableXidFactory();
-
+		//TODO 获取XidFactory,生成Xid值
 		TransactionXid compensableXid = compensableXidFactory.createGlobalXid();
 		TransactionXid transactionXid = transactionXidFactory.createGlobalXid(compensableXid.getGlobalTransactionId());
 
@@ -371,7 +373,7 @@ public class CompensableManagerImpl implements CompensableManager, CompensableBe
 			this.desociateThread();
 		}
 	}
-
+	//TODO TCC事务回滚 rollback()
 	public void rollback() throws IllegalStateException, SecurityException, SystemException {
 
 		CompensableTransaction transaction = this.getCompensableTransactionQuietly();
@@ -388,7 +390,7 @@ public class CompensableManagerImpl implements CompensableManager, CompensableBe
 			throw new IllegalStateException();
 		} else if (coordinator) {
 			if (propagated) {
-				this.invokeTransactionRollback(transaction);
+				this.invokeTransactionRollback(transaction);//TODO 执行代理的具体实现的Rollback方法
 			} else if (propagatedLevel > 0) {
 				this.invokeTransactionRollback(transaction);
 			} else {
@@ -399,7 +401,7 @@ public class CompensableManagerImpl implements CompensableManager, CompensableBe
 		}
 
 	}
-
+	// 执行代理的Rollback方法,从上下文中获取Xid,并执行Xid代表的
 	protected void invokeTransactionRollback(CompensableTransaction compensable)
 			throws IllegalStateException, SecurityException, SystemException {
 
@@ -629,7 +631,7 @@ public class CompensableManagerImpl implements CompensableManager, CompensableBe
 		TransactionXid transactionXid = transactionContext.getXid();
 		try {
 			transactionCoordinator.end(transactionContext, XAResource.TMSUCCESS);
-			transactionCoordinator.rollback(transactionXid);
+			transactionCoordinator.rollback(transactionXid);//TODO 事务回滚
 		} catch (XAException ex) {
 			transactionCoordinator.forgetQuietly(transactionXid);
 			logger.error("Error occurred while rolling back transaction in try phase!", ex);

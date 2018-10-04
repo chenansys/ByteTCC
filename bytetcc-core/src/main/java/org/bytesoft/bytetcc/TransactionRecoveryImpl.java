@@ -282,7 +282,7 @@ public class TransactionRecoveryImpl
 		return null;
 	}
 
-	public synchronized void timingRecover() {
+	public synchronized void timingRecover() { //TODO 事务恢复, 进行定时不断执行的恢复
 		TransactionRepository transactionRepository = beanFactory.getCompensableRepository();
 		List<Transaction> transactions = transactionRepository.getErrorTransactionList();
 		int total = transactions == null ? 0 : transactions.size(), value = 0;
@@ -291,7 +291,7 @@ public class TransactionRecoveryImpl
 			org.bytesoft.transaction.TransactionContext transactionContext = transaction.getTransactionContext();
 			TransactionXid xid = transactionContext.getXid();
 			try {
-				this.recoverTransaction(transaction);
+				this.recoverTransaction(transaction);//TODO 事务恢复
 			} catch (CommitRequiredException ex) {
 				logger.debug("{}| recover: branch={}, message= commit-required",
 						ByteUtils.byteArrayToString(xid.getGlobalTransactionId()),
@@ -320,7 +320,7 @@ public class TransactionRecoveryImpl
 		org.bytesoft.transaction.TransactionContext transactionContext = transaction.getTransactionContext();
 
 		if (transactionContext.isCoordinator()) {
-			transaction.recover();
+			transaction.recover();//TODO 事务恢复
 			this.recoverCoordinator(transaction);
 		} else {
 			transaction.recover();
@@ -346,7 +346,7 @@ public class TransactionRecoveryImpl
 			case Status.STATUS_ACTIVE:
 			case Status.STATUS_MARKED_ROLLBACK:
 			case Status.STATUS_PREPARING:
-			case Status.STATUS_UNKNOWN: /* TODO */ {
+			case Status.STATUS_UNKNOWN: /* TODO1 */ {
 				if (transactionContext.isPropagated() == false) {
 					if ((locked = compensableLock.lockTransaction(xid, this.endpoint)) == false) {
 						throw new SystemException();
@@ -372,7 +372,7 @@ public class TransactionRecoveryImpl
 					throw new SystemException();
 				}
 
-				transaction.recoveryCommit();
+				transaction.recoveryCommit();//TODO 事务恢复的Commit
 				forgetRequired = true;
 				break;
 			}

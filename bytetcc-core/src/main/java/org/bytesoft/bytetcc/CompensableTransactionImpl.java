@@ -71,7 +71,11 @@ public class CompensableTransactionImpl extends TransactionListenerAdapter imple
 	private final TransactionContext transactionContext;
 	private final List<CompensableArchive> archiveList = new ArrayList<CompensableArchive>();
 	private final Map<String, XAResourceArchive> resourceMap = new HashMap<String, XAResourceArchive>();
-	private final List<XAResourceArchive> resourceList = new ArrayList<XAResourceArchive>();
+
+	// 如果你调用了一个服务，bytetcc分布式事务框架，会将你分布式事务中调用其他的服务作为一个resource放到一个resourceList中去，
+	// 这样，分布式事务中调用了哪些其他服务，具体的状态是成功还是失败，都可以感知到
+	private final List<XAResourceArchive> resourceList = //TODO 存放具体的服务
+			new ArrayList<XAResourceArchive>();
 	private final Map<String, XAResourceArchive> applicationMap = new HashMap<String, XAResourceArchive>();
 	private final Map<Thread, Transaction> transactionMap = new ConcurrentHashMap<Thread, Transaction>(4);
 	private CompensableBeanFactory beanFactory;
@@ -96,6 +100,7 @@ public class CompensableTransactionImpl extends TransactionListenerAdapter imple
 
 	private transient Exception createdAt;
 
+	//TODO CompensableTransactionImpl 代表了一个TCC可补偿的,分布式事务的对象
 	public CompensableTransactionImpl(TransactionContext txContext) {
 		this.transactionContext = txContext;
 	}
@@ -109,7 +114,7 @@ public class CompensableTransactionImpl extends TransactionListenerAdapter imple
 		transactionArchive.setCompensableStatus(this.transactionStatus);
 		transactionArchive.setVote(this.transactionVote);
 		transactionArchive.setXid(this.transactionContext.getXid());
-		transactionArchive.getRemoteResources().addAll(this.resourceList);
+		transactionArchive.getRemoteResources().addAll(this.resourceList);//TODO
 		transactionArchive.getCompensableResourceList().addAll(this.archiveList);
 		transactionArchive.setPropagatedBy(this.transactionContext.getPropagatedBy());
 		return transactionArchive;
@@ -122,7 +127,7 @@ public class CompensableTransactionImpl extends TransactionListenerAdapter imple
 		this.recoverIfNecessary();
 
 		if (this.transactionStatus != Status.STATUS_COMMITTED) {
-			this.fireCommit(); // TODO
+			this.fireCommit(); // TODO participantCommit
 		}
 
 	}
@@ -155,7 +160,7 @@ public class CompensableTransactionImpl extends TransactionListenerAdapter imple
 
 		SystemException systemEx = null;
 		try {
-			this.fireNativeParticipantConfirm();
+			this.fireNativeParticipantConfirm();//TODO
 		} catch (SystemException ex) {
 			systemEx = ex;
 
@@ -200,12 +205,13 @@ public class CompensableTransactionImpl extends TransactionListenerAdapter imple
 
 	}
 
-	public synchronized void recoveryCommit() throws CommitRequiredException, SystemException {
+	public synchronized void recoveryCommit()//TODO 事务恢复的Commit
+			throws CommitRequiredException, SystemException {
 
 		this.recoverIfNecessary(); // Recover if transaction is recovered from tx-log.
 
 		try {
-			this.fireCommit();
+			this.fireCommit();//TODO recoveryCommit()
 		} catch (SecurityException ex) {
 			logger.error("{}| confirm native/remote branchs failed!",
 					ByteUtils.byteArrayToString(this.transactionContext.getXid().getGlobalTransactionId()), ex);
@@ -255,7 +261,7 @@ public class CompensableTransactionImpl extends TransactionListenerAdapter imple
 							ByteUtils.byteArrayToString(this.transactionContext.getXid().getGlobalTransactionId()),
 							ByteUtils.byteArrayToString(current.getIdentifier().getGlobalTransactionId()));
 				} else if (StringUtils.isNotBlank(invocation.getConfirmableKey())) {
-					container.confirm(invocation);
+					container.confirm(invocation);//TODO fireNativeParticipantConfirm()
 				} else {
 					current.setConfirmed(true);
 					logger.info("{}| confirm: identifier= {}, resourceKey= {}, resourceXid= {}.",
@@ -279,14 +285,14 @@ public class CompensableTransactionImpl extends TransactionListenerAdapter imple
 
 	}
 
-	private void fireRemoteParticipantConfirm()
+	private void fireRemoteParticipantConfirm()//TODO 核心方法,执行try成功后,分别执行各个事务的Confirm
 			throws HeuristicMixedException, HeuristicRollbackException, CommitRequiredException, SystemException {
 		boolean committedExists = false;
 		boolean rolledbackExists = false;
 		boolean unFinishExists = false;
 		boolean errorExists = false;
 
-		for (int i = 0; i < this.resourceList.size(); i++) {
+		for (int i = 0; i < this.resourceList.size(); i++) {//TODO 各个分布式事务的try,会add到resourceList, 等待try执行成功后,分别再执行事务的Confirm()
 			XAResourceArchive current = this.resourceList.get(i);
 			if (current.isCommitted()) {
 				committedExists = true;
@@ -303,7 +309,7 @@ public class CompensableTransactionImpl extends TransactionListenerAdapter imple
 			TransactionXid branchXid = (TransactionXid) current.getXid();
 			TransactionXid globalXid = xidFactory.createGlobalXid(branchXid.getGlobalTransactionId());
 			try {
-				current.commit(globalXid, true);
+				current.commit(globalXid, true);//TODO Confirm方法的事务提交
 				committedExists = true;
 
 				current.setCommitted(true);
@@ -442,7 +448,7 @@ public class CompensableTransactionImpl extends TransactionListenerAdapter imple
 		this.recoverIfNecessary();
 
 		if (this.transactionStatus != Status.STATUS_ROLLEDBACK) {
-			this.fireRollback(); // TODO
+			this.fireRollback(); // TODO participantRollback()
 		}
 
 	}
@@ -473,7 +479,7 @@ public class CompensableTransactionImpl extends TransactionListenerAdapter imple
 
 		SystemException systemEx = null;
 		try {
-			this.fireNativeParticipantCancel();
+			this.fireNativeParticipantCancel();//TODO 事务回滚,执行应用程序中的Cancel()方法
 		} catch (SystemException ex) {
 			systemEx = ex;
 
@@ -571,7 +577,8 @@ public class CompensableTransactionImpl extends TransactionListenerAdapter imple
 
 	}
 
-	private void fireRemoteParticipantCancel() throws RollbackRequiredException, SystemException {
+	private void fireRemoteParticipantCancel() //TODO Cancel()
+			throws RollbackRequiredException, SystemException {
 		boolean committedExists = false;
 		boolean rolledbackExists = false;
 		boolean unFinishExists = false;

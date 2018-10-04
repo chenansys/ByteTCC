@@ -51,6 +51,11 @@ public class CompensableHandlerInterceptor implements HandlerInterceptor, Compen
 	private String identifier;
 	private ApplicationContext applicationContext;
 
+	/**
+	 * TODO interceptor,拦截器,每个http请求的第一道防线 -> CompensableMethodInterceptor
+	 * 他的本质跟TransactionInterceptor是一样的，就是在一个请求过来的时候，一定会先拦截掉
+	 */
+
 	@SuppressWarnings("deprecation")
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		if (HandlerMethod.class.isInstance(handler) == false) {
@@ -66,7 +71,9 @@ public class CompensableHandlerInterceptor implements HandlerInterceptor, Compen
 		} else if (ErrorController.class.isInstance(hm.getBean())) {
 			return true;
 		}
-
+		//TODO transactionStr 从头文件中获取分布式事务的二进制字符
+		// 这是代表了分布式事务的二进制字符，对其处理一下可以获取到一个二进制字节数组，然后通过工具方法的处理，
+		// 可以从二进制字节数组反序列化，还原出来一个TransactionContext，事务上下文
 		String transactionStr = request.getHeader(HEADER_TRANCACTION_KEY);
 		if (StringUtils.isBlank(transactionStr)) {
 			return true;
@@ -90,6 +97,7 @@ public class CompensableHandlerInterceptor implements HandlerInterceptor, Compen
 
 		TransactionContext transactionContext = null;
 		if (byteArray != null && byteArray.length > 0) {
+			//TODO 从二进制字节数组反序列化，还原出来一个TransactionContext ,分布式事务上下文
 			transactionContext = (TransactionContext) CommonUtils.deserializeObject(byteArray);
 			transactionContext.setPropagated(true);
 			transactionContext.setPropagatedBy(propagationText);

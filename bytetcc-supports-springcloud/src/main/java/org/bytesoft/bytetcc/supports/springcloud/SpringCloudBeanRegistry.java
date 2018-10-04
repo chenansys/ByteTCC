@@ -31,6 +31,7 @@ import org.springframework.web.client.RestTemplate;
 
 public final class SpringCloudBeanRegistry implements CompensableBeanFactoryAware, EnvironmentAware {
 	static final Logger logger = LoggerFactory.getLogger(SpringCloudBeanRegistry.class);
+	//TODO 单例的 SpringCloudBeanRegistry, 所有请求的应用实例
 	private static final SpringCloudBeanRegistry instance = new SpringCloudBeanRegistry();
 
 	@javax.inject.Inject
